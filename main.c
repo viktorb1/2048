@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+
+void printTile(int** tile);
+int** generateFirstTile();
 
 int main() {
 	printf("Select an option and press enter:\n");
@@ -24,7 +28,10 @@ int main() {
 	}
 
 	if (option == 1) {
-		printf("You started a new game\n");
+		printf("You started a new game!\n");
+		int** firstTile = generateFirstTile();
+		printTile(firstTile);
+
 	} else if (option == 2) {
 		printf("The high score is:\n");
 	} else {
@@ -59,13 +66,39 @@ int twoOrFour() {
 	return x;
 }
 
-/*char* generate_first_tile() {
+int** generateFirstTile() {
+	int** firstTile;
+	firstTile = calloc(4, sizeof(int*));
+	for (int i = 0; i < 4; i++) {
+		firstTile[i] = calloc(4, sizeof(int));
+	}
+
+	return firstTile;
 }
 
-char * generate_next_tile() {
+/*char* generateLeftKey() {
 
 }
 
-void print_next_tiles() {
+char* generateRightKey() {
+
+}
+
+char* generateUpKey() {
+
+}
+
+char* generateDownKey() {
 
 }*/
+
+void printTile(int** tile) {
+	int i,j;
+	for (i = 0; i < 4; i++) {
+		printf(" | ");
+		for (j = 0; j < 4; j++) {
+			printf("%4d ",tile[i][j]);
+		}
+		printf("|\n");
+	}
+}
