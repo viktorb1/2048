@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int main() {
 	printf("Select an option and press enter:\n");
@@ -16,7 +17,7 @@ int main() {
 		if (end[0] != '\n') {
 			option = atoi(end);
 		}
-		
+
 		if (option != 1 && option != 2 && option != 3) {
 			printf("This option is not valid, please try again\n");
 		}
@@ -32,21 +33,33 @@ int main() {
 
 	return 0;
 } 
-/*
-typedef struct coordinates {
-	//a coordinate
-} coordinates;
 
-struct randomize_column_and_row() {
-	return coordinates;
-	//generates random coordinates
+typedef struct coordinate {
+	int x, y;
+} coordinate;
+
+coordinate randomColumnAndRow() {
+	srand(time(NULL));
+	coordinate initcoord;
+		initcoord.x = rand() % 4;
+		initcoord.y = rand() % 4;
+	return initcoord;
 }
 
-int two_or_four() {
-	return either a 2 or 4 randomly to start the game
+int twoOrFour() {
+	srand(time(NULL));
+	int x = rand() % 10;
+	
+	if (x == 0) {
+		x = 4;
+	} else {
+		x = 2;
+	}
+
+	return x;
 }
 
-char* generate_first_tile() {
+/*char* generate_first_tile() {
 }
 
 char * generate_next_tile() {
