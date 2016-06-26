@@ -9,27 +9,11 @@ int** generateLeftGrid(int** tile);
 int** generateRightGrid(int** tile);
 int** generateUpGrid(int** tile);
 int** generateDownGrid(int** tile);
+int showMainMenu();
 
 int main() {
-	printf("Select an option and press enter:\n");
-	printf("1. Start a New Same\n2. View High Score\n3. Quit Game\n");
-	
-	char input[20] = "";
-	char* end;
-	int option = atoi(input);
-	
-	while((option != 1 && option != 2 && option != 3)) {
-		fgets(input, 20, stdin);
-		option = strtol(input, &end, 10);
-		
-		if (end[0] != '\n') {
-			option = atoi(end);
-		} 
-		if (option != 1 && option != 2 && option != 3) {
-			printf("This option is not valid, please try again\n");
-		}
-	}
 
+	int option = showMainMenu();
 	if (option == 1) {
 		system("cls");
 		srand(time(NULL));
@@ -40,8 +24,6 @@ int main() {
 		printf(" Press 'q' to quit.\n w/a/s/d to move grid\n");
 		
 		int move;
-
-		
 		while ((move = getchar()) != 'q') {
 			if (move == 'a') {
 				system("cls");
@@ -121,10 +103,64 @@ int** generateFirstGrid() {
 }
 
 int** generateLeftGrid(int** tile) {
+	int i, j, new = 0;
+
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			if (tile[i][j] != 0) {
+				tile[i][new] = tile[i][j];
+
+			if (j != new) {
+				tile[i][j] = 0;
+			}
+
+			new++;
+			}
+			
+		}
+		new = 0;
+	}
+
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 3; j++) {
+			if (tile[i][j] == tile[i][j+1]) {
+				tile[i][j] = 2*tile[i][j];
+				tile[i][j+1] = 0;
+			}
+		}
+	}
+
 	return tile;
 }
 
 int** generateRightGrid(int** tile) {
+	int i, j, new = 3;
+
+	for (i = 3; i >= 0; i--) {
+		for (j = 3; j >= 0; j--) {
+			if (tile[i][j] != 0) {
+				tile[i][new] = tile[i][j];
+
+			if (j != new) {
+				tile[i][j] = 0;
+			}
+
+			new--;
+			}
+			
+		}
+		new = 3;
+	}
+
+	for (i = 3; i >= 0; i--) {
+		for (j = 3; j > 0; j--) {
+			if (tile[i][j] == tile[i][j-1]) {
+				tile[i][j] = 2*tile[i][j];
+				tile[i][j-1] = 0;
+			}
+		}
+	}
+
 	return tile;
 }
 
@@ -145,4 +181,26 @@ void printGrid(int** tile) {
 		}
 		printf("|\n");
 	}
+}
+
+int showMainMenu() {
+	printf("Select an option and press enter:\n");
+	printf("1. Start a New Same\n2. View High Score\n3. Quit Game\n");
+	
+	char input[20] = "";
+	char* end;
+	int option = atoi(input);
+	
+	while((option != 1 && option != 2 && option != 3)) {
+		fgets(input, 20, stdin);
+		option = strtol(input, &end, 10);
+		
+		if (end[0] != '\n') {
+			option = atoi(end);
+		} 
+		if (option != 1 && option != 2 && option != 3) {
+			printf("This option is not valid, please try again\n");
+		}
+	}
+	return option;
 }
