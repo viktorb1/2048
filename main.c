@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <string.h>
 
 void printGrid(int** tile);
 int** generateFirstGrid();
@@ -10,6 +11,11 @@ int** generateRightGrid(int** tile);
 int** generateUpGrid(int** tile);
 int** generateDownGrid(int** tile);
 int showMainMenu();
+int** addNewTwoOrFour(int** tile);
+int intComp(int** currentTile, int** nextTile);
+int** addFirstTwoOrFourtoTile(int** firstTile);
+void checkIf2048(int** tile);
+void checkAndStoreHighScore(int** tile);
 
 int main() {
 
@@ -18,6 +24,15 @@ int main() {
 		system("cls");
 		srand(time(NULL));
 		int** currentTile = generateFirstGrid();
+		addFirstTwoOrFourtoTile(currentTile);
+		int** nextTile = generateFirstGrid();
+
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				nextTile[i][j] = currentTile[i][j];
+			}
+		}
+
 		printGrid(currentTile);
 
 		printf("\n You started a new game!\n");
@@ -27,20 +42,48 @@ int main() {
 		while ((move = getchar()) != 'q') {
 			if (move == 'a') {
 				system("cls");
-				currentTile = generateLeftGrid(currentTile);
+				nextTile = generateLeftGrid(currentTile);
+				int x = intComp(nextTile, currentTile);
+				if (x == 1) {
+					currentTile = nextTile;
+					currentTile = addNewTwoOrFour(currentTile);
+				}
 				printGrid(currentTile);
+				checkAndStoreHighScore(currentTile);
+				checkIf2048(currentTile);
 			} else if (move == 'd') {
 				system("cls");
-				currentTile = generateRightGrid(currentTile);
+				nextTile = generateRightGrid(currentTile);
+				int x = intComp(nextTile, currentTile);
+				if (x == 1) {
+					currentTile = nextTile;
+					currentTile = addNewTwoOrFour(currentTile);
+				}
 				printGrid(currentTile);
+				checkAndStoreHighScore(currentTile);
+				checkIf2048(currentTile);
 			} else if (move == 'w') {
 				system("cls");
-				currentTile = generateUpGrid(currentTile);
+				nextTile = generateUpGrid(currentTile);
+				int x = intComp(nextTile, currentTile);
+				if (x == 1) {
+					currentTile = nextTile;
+					currentTile = addNewTwoOrFour(currentTile);
+				}
 				printGrid(currentTile);
+				checkAndStoreHighScore(currentTile);
+				checkIf2048(currentTile);
 			} else if (move == 's') {
 				system("cls");
-				currentTile = generateDownGrid(currentTile);
+				nextTile = generateDownGrid(currentTile);
+				int x = intComp(nextTile, currentTile);
+				if (x == 1) {
+					currentTile = nextTile;
+					currentTile = addNewTwoOrFour(currentTile);
+				}
 				printGrid(currentTile);
+				checkAndStoreHighScore(currentTile);
+				checkIf2048(currentTile);
 			} else {
 				if (move != '\n') {
 					printf("Invalid move\n");
@@ -49,7 +92,14 @@ int main() {
 		}
 
 	} else if (option == 2) {
-		printf("The high score is:\n");
+		FILE *fp = fopen("highscore.txt","r");
+		char scorestr[4];
+		fgets(scorestr, 4, fp);
+
+		printf("The high score is: %s\n",scorestr);
+
+
+
 	} else {
 		printf("Bye!\n");
 	}
@@ -88,6 +138,10 @@ int** generateFirstGrid() {
 		firstTile[i] = calloc(4, sizeof(int));
 	}
 
+	return firstTile;
+}
+
+int** addFirstTwoOrFourtoTile(int** firstTile) {
 	int a = twoOrFour();
 	int b = twoOrFour();
 	coordinate coordOne = randomColumnAndRow();
@@ -98,20 +152,28 @@ int** generateFirstGrid() {
 	
 	firstTile[coordOne.x][coordOne.y] = a;
 	firstTile[coordTwo.x][coordTwo.y] = b;
-
 	return firstTile;
 }
 
+
 int** generateLeftGrid(int** tile) {
+	int **newGrid = generateFirstGrid();
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			newGrid[i][j] = tile[i][j];
+		}
+	}
+
 	int i, j, new = 0;
 
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 4; j++) {
-			if (tile[i][j] != 0) {
-				tile[i][new] = tile[i][j];
+			if (newGrid[i][j] != 0) {
+				newGrid[i][new] = newGrid[i][j];
 
 			if (j != new) {
-				tile[i][j] = 0;
+				newGrid[i][j] = 0;
 			}
 
 			new++;
@@ -123,26 +185,50 @@ int** generateLeftGrid(int** tile) {
 
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 3; j++) {
-			if (tile[i][j] == tile[i][j+1]) {
-				tile[i][j] = 2*tile[i][j];
-				tile[i][j+1] = 0;
+			if (newGrid[i][j] == newGrid[i][j+1]) {
+				newGrid[i][j] = 2*newGrid[i][j];
+				newGrid[i][j+1] = 0;
 			}
 		}
 	}
 
-	return tile;
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			if (newGrid[i][j] != 0) {
+				newGrid[i][new] = newGrid[i][j];
+
+			if (j != new) {
+				newGrid[i][j] = 0;
+			}
+
+			new++;
+			}
+			
+		}
+		new = 0;
+	}
+
+	return newGrid;
 }
 
 int** generateRightGrid(int** tile) {
+	int **newGrid = generateFirstGrid();
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			newGrid[i][j] = tile[i][j];
+		}
+	}
+
 	int i, j, new = 3;
 
 	for (i = 3; i >= 0; i--) {
 		for (j = 3; j >= 0; j--) {
-			if (tile[i][j] != 0) {
-				tile[i][new] = tile[i][j];
+			if (newGrid[i][j] != 0) {
+				newGrid[i][new] = newGrid[i][j];
 
 			if (j != new) {
-				tile[i][j] = 0;
+				newGrid[i][j] = 0;
 			}
 
 			new--;
@@ -154,21 +240,139 @@ int** generateRightGrid(int** tile) {
 
 	for (i = 3; i >= 0; i--) {
 		for (j = 3; j > 0; j--) {
-			if (tile[i][j] == tile[i][j-1]) {
-				tile[i][j] = 2*tile[i][j];
-				tile[i][j-1] = 0;
+			if (newGrid[i][j] == newGrid[i][j-1]) {
+				newGrid[i][j] = 2*newGrid[i][j];
+				newGrid[i][j-1] = 0;
 			}
 		}
 	}
 
-	return tile;
+	for (i = 3; i >= 0; i--) {
+		for (j = 3; j >= 0; j--) {
+			if (newGrid[i][j] != 0) {
+				newGrid[i][new] = newGrid[i][j];
+
+			if (j != new) {
+				newGrid[i][j] = 0;
+			}
+
+			new--;
+			}
+			
+		}
+		new = 3;
+	}
+
+	return newGrid;
 }
 
 int** generateUpGrid(int** tile) {
-	return tile;
+	int **newGrid = generateFirstGrid();
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			newGrid[i][j] = tile[i][j];
+		}
+	}
+
+	int i, j, new = 0;
+
+	for (j = 0; j < 4; j++) {
+		for (i = 0; i < 4; i++) {
+			if (newGrid[i][j] != 0) {
+				newGrid[new][j] = newGrid[i][j];
+
+			if (i != new) {
+				newGrid[i][j] = 0;
+			}
+
+			new++;
+			}
+			
+		}
+		new = 0;
+	}
+
+	for (j = 0; j < 4; j++) {
+		for (i = 0; i < 3; i++) {
+			if (newGrid[i][j] == newGrid[i+1][j]) {
+				newGrid[i][j] = 2*newGrid[i][j];
+				newGrid[i+1][j] = 0;
+			}
+		}
+	}
+
+	for (j = 0; j < 4; j++) {
+		for (i = 0; i < 4; i++) {
+			if (newGrid[i][j] != 0) {
+				newGrid[new][j] = newGrid[i][j];
+
+			if (i != new) {
+				newGrid[i][j] = 0;
+			}
+
+			new++;
+			}
+			
+		}
+		new = 0;
+	}	
+
+	return newGrid;
 }
 
 int** generateDownGrid(int** tile) {
+	int **newGrid = generateFirstGrid();
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			newGrid[i][j] = tile[i][j];
+		}
+	}
+
+	int i, j, new = 3;
+
+	for (j = 3; j >= 0; j--) {
+		for (i = 3; i >= 0; i--) {
+			if (newGrid[i][j] != 0) {
+				newGrid[new][j] = newGrid[i][j];
+
+			if (i != new) {
+				newGrid[i][j] = 0;
+			}
+
+			new--;
+			}
+			
+		}
+		new = 3;
+	}
+
+	for (j = 3; j >= 0; j--) {
+		for (i = 3; i > 0; i--) {
+			if (newGrid[i][j] == newGrid[i-1][j]) {
+				newGrid[i][j] = 2*newGrid[i][j];
+				newGrid[i-1][j] = 0;
+			}
+		}
+	}
+
+	for (j = 3; j >= 0; j--) {
+		for (i = 3; i >= 0; i--) {
+			if (newGrid[i][j] != 0) {
+				newGrid[new][j] = newGrid[i][j];
+
+			if (i != new) {
+				newGrid[i][j] = 0;
+			}
+
+			new--;
+			}
+			
+		}
+		new = 3;
+	}
+
 	return tile;
 }
 
@@ -177,9 +381,13 @@ void printGrid(int** tile) {
 	for (i = 0; i < 4; i++) {
 		printf(" | ");
 		for (j = 0; j < 4; j++) {
-			printf("%4d ",tile[i][j]);
+			if (tile[i][j] == 0) {
+				printf("     ");
+			} else {
+				printf("%4d ",tile[i][j]);
+			}
 		}
-		printf("|\n");
+		printf("  |\n");
 	}
 }
 
@@ -203,4 +411,62 @@ int showMainMenu() {
 		}
 	}
 	return option;
+}
+
+int** addNewTwoOrFour(int** tile) {
+	coordinate coordinate = randomColumnAndRow();
+
+	while (tile[coordinate.y][coordinate.x] != 0) {
+		coordinate = randomColumnAndRow();
+	}
+
+	tile[coordinate.y][coordinate.x] = twoOrFour();
+
+	return tile;
+}
+
+int intComp(int** currentTile, int** nextTile) {
+	int i, j;
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			if (currentTile[i][j] != nextTile[i][j]) {
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+}
+
+void checkAndStoreHighScore(int** tile) {
+	FILE *fp = fopen("highscore.txt", "r");
+
+	char scorestr[4];
+	fgets(scorestr, 4, fp);
+
+	int score = atoi(scorestr);
+
+	int i, j;
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			if (tile[i][j] > score) {
+				char newscore[4]; 
+				sprintf(newscore, "%d\n", tile[i][j]);
+				fp = fopen("highscore.txt","w");
+				fprintf(fp, newscore);
+			}
+		}
+	}
+	fclose(fp);
+}
+void checkIf2048(int** tile) {
+	int i, j;
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			if (tile[i][j] == 2048) {
+				printf("Congrats! You won the game!");
+				exit(EXIT_SUCCESS);
+			}
+		}
+	}
 }
