@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
+#include <time.h>
 
-void printTile(int** tile);
-int** generateFirstTile();
+void printGrid(int** tile);
+int** generateFirstGrid();
+int** generateLeftGrid(int** tile);
+int** generateRightGrid(int** tile);
+int** generateUpGrid(int** tile);
+int** generateDownGrid(int** tile);
 
 int main() {
 	printf("Select an option and press enter:\n");
@@ -20,17 +24,47 @@ int main() {
 		
 		if (end[0] != '\n') {
 			option = atoi(end);
-		}
-
+		} 
 		if (option != 1 && option != 2 && option != 3) {
 			printf("This option is not valid, please try again\n");
 		}
 	}
 
 	if (option == 1) {
-		printf("You started a new game!\n");
-		int** firstTile = generateFirstTile();
-		printTile(firstTile);
+		system("cls");
+		srand(time(NULL));
+		int** currentTile = generateFirstGrid();
+		printGrid(currentTile);
+
+		printf("\n You started a new game!\n");
+		printf(" Press 'q' to quit.\n w/a/s/d to move grid\n");
+		
+		int move;
+
+		
+		while ((move = getchar()) != 'q') {
+			if (move == 'a') {
+				system("cls");
+				currentTile = generateLeftGrid(currentTile);
+				printGrid(currentTile);
+			} else if (move == 'd') {
+				system("cls");
+				currentTile = generateRightGrid(currentTile);
+				printGrid(currentTile);
+			} else if (move == 'w') {
+				system("cls");
+				currentTile = generateUpGrid(currentTile);
+				printGrid(currentTile);
+			} else if (move == 's') {
+				system("cls");
+				currentTile = generateDownGrid(currentTile);
+				printGrid(currentTile);
+			} else {
+				if (move != '\n') {
+					printf("Invalid move\n");
+				}
+			}
+		}
 
 	} else if (option == 2) {
 		printf("The high score is:\n");
@@ -46,15 +80,13 @@ typedef struct coordinate {
 } coordinate;
 
 coordinate randomColumnAndRow() {
-	srand(time(NULL));
 	coordinate initcoord;
-		initcoord.x = rand() % 4;
-		initcoord.y = rand() % 4;
+	initcoord.x = rand() % 4;
+	initcoord.y = rand() % 4;
 	return initcoord;
 }
 
 int twoOrFour() {
-	srand(time(NULL));
 	int x = rand() % 10;
 	
 	if (x == 0) {
@@ -66,33 +98,45 @@ int twoOrFour() {
 	return x;
 }
 
-int** generateFirstTile() {
+int** generateFirstGrid() {
 	int** firstTile;
 	firstTile = calloc(4, sizeof(int*));
-	for (int i = 0; i < 4; i++) {
+	int i;
+	for (i = 0; i < 4; i++) {
 		firstTile[i] = calloc(4, sizeof(int));
 	}
+
+	int a = twoOrFour();
+	int b = twoOrFour();
+	coordinate coordOne = randomColumnAndRow();
+	coordinate coordTwo = randomColumnAndRow();
+	while (coordOne.x == coordTwo.x && coordOne.y == coordTwo.y) {
+		coordTwo = randomColumnAndRow();
+	}
+	
+	firstTile[coordOne.x][coordOne.y] = a;
+	firstTile[coordTwo.x][coordTwo.y] = b;
 
 	return firstTile;
 }
 
-/*char* generateLeftKey() {
-
+int** generateLeftGrid(int** tile) {
+	return tile;
 }
 
-char* generateRightKey() {
-
+int** generateRightGrid(int** tile) {
+	return tile;
 }
 
-char* generateUpKey() {
-
+int** generateUpGrid(int** tile) {
+	return tile;
 }
 
-char* generateDownKey() {
+int** generateDownGrid(int** tile) {
+	return tile;
+}
 
-}*/
-
-void printTile(int** tile) {
+void printGrid(int** tile) {
 	int i,j;
 	for (i = 0; i < 4; i++) {
 		printf(" | ");
