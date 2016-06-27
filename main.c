@@ -16,6 +16,7 @@ int intComp(int** currentTile, int** nextTile);
 int** addFirstTwoOrFourtoTile(int** firstTile);
 void checkIf2048(int** tile);
 void checkAndStoreHighScore(int** tile);
+void checkifGameOver(int** tile);
 
 int main() {
 
@@ -51,6 +52,7 @@ int main() {
 				printGrid(currentTile);
 				checkAndStoreHighScore(currentTile);
 				checkIf2048(currentTile);
+				checkifGameOver(currentTile);
 			} else if (move == 'd') {
 				system("cls");
 				nextTile = generateRightGrid(currentTile);
@@ -62,6 +64,7 @@ int main() {
 				printGrid(currentTile);
 				checkAndStoreHighScore(currentTile);
 				checkIf2048(currentTile);
+				checkifGameOver(currentTile);
 			} else if (move == 'w') {
 				system("cls");
 				nextTile = generateUpGrid(currentTile);
@@ -73,6 +76,7 @@ int main() {
 				printGrid(currentTile);
 				checkAndStoreHighScore(currentTile);
 				checkIf2048(currentTile);
+				checkifGameOver(currentTile);
 			} else if (move == 's') {
 				system("cls");
 				nextTile = generateDownGrid(currentTile);
@@ -84,6 +88,7 @@ int main() {
 				printGrid(currentTile);
 				checkAndStoreHighScore(currentTile);
 				checkIf2048(currentTile);
+				checkifGameOver(currentTile);
 			} else {
 				if (move != '\n') {
 					printf("Invalid move\n");
@@ -466,6 +471,27 @@ void checkIf2048(int** tile) {
 			if (tile[i][j] == 2048) {
 				printf("Congrats! You won the game!");
 				exit(EXIT_SUCCESS);
+			}
+		}
+	}
+}
+
+void checkifGameOver(int** tile) {
+	int i, j, count = 0;
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			if (tile[i][j] == 0) {
+				count++;
+			}
+	}
+}
+	if (count == 0) {
+		for (i = 0; i < 4; i++) {
+			for (j = 0; j < 4; j++) {
+				if ((tile[i][j] != tile[i][j+1]) || (tile[i][j] != tile[i+1][j])) {
+					printf("\n Game Over!\n");
+					exit(EXIT_SUCCESS);
+				}
 			}
 		}
 	}
