@@ -483,16 +483,35 @@ void checkifGameOver(int** tile) {
 			if (tile[i][j] == 0) {
 				count++;
 			}
+		}
 	}
-}
+
+	int k = 0;
 	if (count == 0) {
 		for (i = 0; i < 4; i++) {
 			for (j = 0; j < 4; j++) {
-				if ((tile[i][j] != tile[i][j+1]) || (tile[i][j] != tile[i+1][j])) {
-					printf("\n Game Over!\n");
-					exit(EXIT_SUCCESS);
+				if (i < 3 && j < 3) {
+					if ((tile[i][j] == tile[i][j+1]) || (tile[i][j] == tile[i+1][j])) {
+					k++;
 				}
 			}
+
+				if (i == 3 && j < 3) {
+					if ((tile[i][j] == tile[i][j+1])) {
+						k++;
+					}
+				}
+
+				if (j == 3 && i < 3) {
+					if ((tile[i][j] == tile[i+1][j])) {
+						k++;
+					}
+				}
+			}
+		}
+		if (k == 0) {
+			printf("\n Game Over!\n");
+			exit(EXIT_SUCCESS);
 		}
 	}
 }
