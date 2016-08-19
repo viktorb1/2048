@@ -3,14 +3,13 @@
 
 int** generateLeftGrid(int** grid) {
 	int **nextGrid = generateBlankGrid();
+	int i, j, column = 0;
 
-	for (int i = 0; i < GRID_SIZE; i++) {
-		for (int j = 0; j < GRID_SIZE; j++) {
+	for (i = 0; i < GRID_SIZE; i++) {
+		for (j = 0; j < GRID_SIZE; j++) {
 			nextGrid[i][j] = grid[i][j];
 		}
 	}
-
-	int i, j, column = 0;
 
 	for (i = 0; i < GRID_SIZE; i++) {
 		for (j = 0; j < GRID_SIZE; j++) {
@@ -59,13 +58,13 @@ int** generateLeftGrid(int** grid) {
 int** generateRightGrid(int** grid) {
 	int **nextGrid = generateBlankGrid();
 
-	for (int i = 0; i < GRID_SIZE; i++) {
-		for (int j = 0; j < GRID_SIZE; j++) {
+	int i, j, column = (GRID_SIZE-1);
+
+	for (i = 0; i < GRID_SIZE; i++) {
+		for (j = 0; j < GRID_SIZE; j++) {
 			nextGrid[i][j] = grid[i][j];
 		}
 	}
-
-	int i, j, column = (GRID_SIZE-1);
 
 	for (i = (GRID_SIZE-1); i >= 0; i--) {
 		for (j = (GRID_SIZE-1); j >= 0; j--) {
@@ -114,13 +113,14 @@ int** generateRightGrid(int** grid) {
 int** generateUpGrid(int** grid) {
 	int **nextGrid = generateBlankGrid();
 
-	for (int i = 0; i < GRID_SIZE; i++) {
-		for (int j = 0; j < GRID_SIZE; j++) {
+	int i, j, row = 0;
+
+	for (i = 0; i < GRID_SIZE; i++) {
+		for (j = 0; j < GRID_SIZE; j++) {
 			nextGrid[i][j] = grid[i][j];
 		}
 	}
 
-	int i, j, row = 0;
 
 	for (j = 0; j < GRID_SIZE; j++) {
 		for (i = 0; i < GRID_SIZE; i++) {
@@ -168,14 +168,14 @@ int** generateUpGrid(int** grid) {
 
 int** generateDownGrid(int** grid) {
 	int **nextGrid = generateBlankGrid();
-
-	for (int i = 0; i < GRID_SIZE; i++) {
-		for (int j = 0; j < GRID_SIZE; j++) {
+	
+	int i, j, row = (GRID_SIZE-1);
+	
+	for (i = 0; i < GRID_SIZE; i++) {
+		for (j = 0; j < GRID_SIZE; j++) {
 			nextGrid[i][j] = grid[i][j];
 		}
 	}
-
-	int i, j, row = (GRID_SIZE-1);
 
 	for (j = (GRID_SIZE-1); j >= 0; j--) {
 		for (i = (GRID_SIZE-1); i >= 0; i--) {

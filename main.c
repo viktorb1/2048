@@ -11,6 +11,7 @@ int showMainMenu();
 int** addNewTwoOrFour(int** grid);
 
 int main() {
+	int i,j;
 	int option = showMainMenu();
 	if (option == 1) {
 		system("clear");
@@ -19,8 +20,8 @@ int main() {
 		addFirstTwoOrFourtoGrid(currentgrid);
 		int** nextgrid = generateBlankGrid();
 
-		for (int i = 0; i < (GRID_SIZE); i++) {
-			for (int j = 0; j < (GRID_SIZE); j++) {
+		for (i = 0; i < (GRID_SIZE); i++) {
+			for (j = 0; j < (GRID_SIZE); j++) {
 				nextgrid[i][j] = currentgrid[i][j];
 			}
 		}

@@ -49,7 +49,7 @@ void checkifGameOver(int** grid) {
 			}
 		}
 		if (k == 0) {
-			printf("\n Game Over!\n");
+			printf("\n Game Over! Your high score was saved!\n");
 			exit(EXIT_SUCCESS);
 		}
 	}
